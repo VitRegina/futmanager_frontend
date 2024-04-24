@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { startTransition } from 'react';
 import { FutmanagerButton, FutmanagerTitles, FutmanagerSnackbar } from "../../components";
 import AddIcon from '@mui/icons-material/Add';
+import SaveAltIcon from '@mui/icons-material/SaveAlt'; // Ícone para o botão de salvar em PDF
 
 export default function CadastroPerfil() {
   const [perfilList, setPerfilList] = useState({});
@@ -65,15 +66,23 @@ export default function CadastroPerfil() {
     });
   }
 
+  const handleExportToPDF = () => {
+    // Lógica para exportar os dados para PDF
+    // Você precisa implementar esta funcionalidade
+    console.log("Exporting to PDF...");
+  };
+
   const columns = [
     { field: 'id', headerName: 'ID', width: 100 },
     { field: 'perfil', headerName: 'Perfil', width: 300 },
-    { field: 'ativo', headerName: 'Ativo', width: 200,
-    renderCell: (params) => {
-      return (
-        params.value ? 'SIM' : 'NÃO'
-      );
-    } },
+    {
+      field: 'ativo', headerName: 'Ativo', width: 200,
+      renderCell: (params) => {
+        return (
+          params.value ? 'SIM' : 'NÃO'
+        );
+      }
+    },
     { field: 'created_at', headerName: 'Data de Criação', width: 200 },
     { field: 'updated_at', headerName: 'Data de Atualização', width: 200 },
     {
@@ -111,7 +120,12 @@ export default function CadastroPerfil() {
   return (
     <>
       <FutmanagerTitles title={"Perfils Cadastrados"} />
-      <FutmanagerButton className='pl-6' color="primary" click={createItem} icon={<AddIcon />} />
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+        <FutmanagerButton className='pl-6' color="primary" click={createItem} icon={<AddIcon />} />
+        <IconButton color="primary" onClick={handleExportToPDF}>
+          <SaveAltIcon /> Exportar para PDF
+        </IconButton>
+      </div>
       <DataGrid
         className='m-3'
         sx={{ width: '100%' }}
@@ -142,4 +156,6 @@ export default function CadastroPerfil() {
         handleClose={closeSnackBar} />
     </>
   )
+
+      
 }

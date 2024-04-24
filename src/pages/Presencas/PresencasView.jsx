@@ -8,6 +8,16 @@ import { DataGrid } from '@mui/x-data-grid';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import ReplyIcon from '@mui/icons-material/Reply';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import pdfMake from 'pdfmake/build/pdfmake'
+import pdfFonts from 'pdfmake/build/vfs_fonts'
+import { Margin } from '@mui/icons-material';
+
+
+
+
+
+
 
 export default function PresencasView() {
     var { id } = useParams();
@@ -51,6 +61,65 @@ export default function PresencasView() {
             navegacao('/chamadas')
         });
     };
+
+    const exportarPDF = () => {
+        const docDefinition = {
+            content: [
+                { text: 'Lista de Alunos', style: 'header' },
+                {
+                    table: {
+                        headerRows: 1,
+                        widths: ['auto', '*', 'auto', 'auto'],
+                        body: [
+                            [{ text: 'Número', bold: true }, { text: 'Nome', bold: true }, { text: 'Posição', bold: true }, { text: 'Presença', bold: true }],
+                            ...atletaList.map(atleta => [atleta.numeroUniforme, atleta.nomeCompleto, atleta.posicao, atleta.presente ? 'Presente' : 'Ausente'])
+                        ]
+                    }
+                }
+            ],
+            styles: {
+                header: {
+                    fontSize: 18,
+                    bold: true,
+                    margin: [0, 0, 0, 10]
+                }
+            }
+        };
+        pdfMake.createPdf(docDefinition).open();
+    };
+
+    function alunosPDF(id){
+        pdfMake.vfs = pdfFonts.pdfMake.vfs;
+        const [atletaList, setAtletaList] = useState({});
+        const reportTitle = [
+            {
+                text: 'Alunos',
+                fontSize: 15,
+                bold: true,
+                margin: [15,20,0,45]
+            }
+           
+        ]
+    }
+    
+    const details = [
+        {
+            table:{
+                headerRows: 1,
+                widths: ['*','*','*','*'],
+                body:[
+                    [
+                        {text: 'Número', style:'tableHeader', fontSize:10},
+                        {text: 'Nome', style:'tableHeader', fontSize:10},
+                        {text: 'Posição', style:'tableHeader', fontSize:10},
+                        {text: 'Presenças', style:'tableHeader', fontSize:10},
+                    ]
+                ]
+            },
+            layout: 'headerLineOnly'
+        }
+    ];
+
 
 
     useEffect(() => {
@@ -103,8 +172,17 @@ export default function PresencasView() {
                         onClick={()=> {voltarPagina()}}
                         variant="contained" 
                         className='bg-blue-fut-paz hover:bg-blue-fut-paz-900' 
-                        startIcon={<ReplyIcon />}>
+                        startIcon={<ReplyIcon />}
+                        style={{ marginRight: '8px' }}>
                         Voltar
+                    </Button>
+                    <Button 
+                        onClick={()=> {alunosPDF()}}
+                        variant="contained" 
+                        className='bg-pink-fut-paz hover:bg-blue-fut-paz-500' 
+                        startIcon={<PictureAsPdfIcon/>}>
+                            
+                        Exportar
                     </Button>
                 </div>
             </div>
